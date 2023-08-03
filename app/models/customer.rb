@@ -3,8 +3,8 @@ class Customer < ApplicationRecord
                         :last_name
   
   has_many :invoices, dependent: :destroy
-  has_many :merchants, through: :invoices
-  has_many :transactions, through: :invoices
+  has_many :merchants, through: :invoices, dependent: :destroy
+  has_many :transactions, through: :invoices, dependent: :destroy
 
   def self.top_customers
     joins(:transactions)
