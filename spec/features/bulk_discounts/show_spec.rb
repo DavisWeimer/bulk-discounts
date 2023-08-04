@@ -8,19 +8,17 @@ RSpec.describe "bulk discounts show", type: :feature do
     end
     
     it "displays specific bulk discount attributes" do
-      bulk_discounts_to_show = @bulk_discounts[0..2]
+      bulk_discount_A = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.44, minimum_quantity: 1234)
 
       visit merchant_bulk_discounts_path(@merchant_A)
 
-      bulk_discounts_to_show.each do |discount|
-        within "#discount-#{discount.id}" do
-          click_button("Show Page")
-          expect(current_path).to eq(merchant_bulk_discount_path(@merchant_A, discount))
-          expect(page).to have_content("-#{discount.percentage_converted}% off")
-          expect(page).to have_content(discount.minimum_quantity)
-          save_and_open_page
-        end
+      within "#discount-#{bulk_discount_A.id}" do
+        click_button("Show Page")
       end
+      
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant_A, bulk_discount_A))
+      expect(page).to have_content("-#{bulk_discount_A.percentage_converted}% off")
+      expect(page).to have_content(bulk_discount_A.minimum_quantity)
     end
   end
 end
