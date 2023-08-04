@@ -16,6 +16,7 @@ class BulkDiscountsController < ApplicationController
       flash[:notice] = "New discount was successfully created."
       redirect_to merchant_bulk_discounts_path(@merchant)
     else
+      flash[:alert] = "Discount percentage must be between 0.01 and 0.99"
       render :new
     end
   end

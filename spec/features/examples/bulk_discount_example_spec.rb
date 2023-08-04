@@ -12,7 +12,7 @@ RSpec.describe "Bulk Discount Examples" do
   describe "#example 1" do
     it "tests that Merchant A's discount will not apply" do
       merchant_A = create(:merchant)
-      bulk_discount_A = create(:bulk_discount, merchant: merchant_A, discount_percentage: 20, minimum_quantity: 10)
+      bulk_discount_A = create(:bulk_discount, merchant: merchant_A, discount_percentage: 0.20, minimum_quantity: 10)
       item_A = create(:item, merchant: merchant_A)
       item_B = create(:item, merchant: merchant_A)
 
