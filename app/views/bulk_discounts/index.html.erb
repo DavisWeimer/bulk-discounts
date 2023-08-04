@@ -20,6 +20,7 @@
             <p>Percentage: -<%= discount.percentage_converted %>% off</p>
             <p>Minimum Quantity: <%= discount.minimum_quantity %></p>
             <%= button_to "Show Page", merchant_bulk_discount_path(@merchant.id, discount.id), method: :get %>
+            <%= button_to "Delete", merchant_bulk_discount_path(@merchant.id, discount.id), method: :delete %>
           </section>
         <% end %>
       </section>

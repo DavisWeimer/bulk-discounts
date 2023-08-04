@@ -183,7 +183,26 @@ RSpec.describe "merchant dashboard" do
 
       visit merchant_bulk_discounts_path(@merchant_A.id)
 
-      expect(page).to have_button("Delete Discount")
+      expect(page).to have_button("Delete")
     end
+
+    it "can delete discount and redirects back to bulk discount index" do
+      discounts_to_delete = @bulk_discounts[0..1]
+      require 'pry'; binding.pry
+      visit merchant_bulk_discounts_path(@merchant_A.id)
+      
+      discounts_to_delete.each do |discount|
+        within "#discount-#{discount.id}" do
+          click_button "Delete"
+          expect(current_path).to eq(merchant_bulk_discount_path(discount))
+        end
+      end
+
+      (@discounts - discounts_to_delete).each do |discount|
+        expect(page).to_not have_content(discount.discount_percentage)
+        expect(page).to_not have_content(discount.minimum_quantity)
+      end
+    end
+
   end
 end
