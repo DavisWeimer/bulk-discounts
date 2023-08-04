@@ -135,14 +135,15 @@ RSpec.describe "merchant dashboard" do
     it "When I click the link I am taken to the bulk discounts index page" do
 
       visit merchant_dashboard_index_path(@merchant_A.id)
-      
+
       click_link("Bulk Discounts")
       expect(current_path).to eq(merchant_bulk_discounts_path(@merchant_A.id))
-
+      
       expect(page).to have_content("My Bulk Discounts")
       @bulk_discounts.each do |discount|
-        expect(page).to have_content(discount.discount_percentage)
+        expect(page).to have_content("-#{discount.percentage_converted}% off")
         expect(page).to have_content(discount.minimum_quantity)
+        expect(page).to have_button("Show Page")
       end
     end
   end
