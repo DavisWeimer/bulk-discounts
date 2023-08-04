@@ -1,4 +1,5 @@
 class BulkDiscountsController < ApplicationController
+  before_action :find_bulk_discount_and_merchant, only: [:destroy]
   before_action :find_merchant, only: [:new, :create, :index]
 
   def index
@@ -18,10 +19,21 @@ class BulkDiscountsController < ApplicationController
       render :new
     end
   end
+  
+  def destroy
+    @bulk_discount.destroy
+    flash[:notice] = "Discount was successfully deleted."
+    redirect_to merchant_bulk_discounts_path(@merchant)
+  end
 
   private
   def bulk_discount_params
     params.require(:bulk_discount).permit(:discount_percentage, :minimum_quantity)
+  end
+
+  def find_bulk_discount_and_merchant
+    @bulk_discount = BulkDiscount.find(params[:id])
+    @merchant = Merchant.find(params[:merchant_id])
   end
 
   def find_merchant
