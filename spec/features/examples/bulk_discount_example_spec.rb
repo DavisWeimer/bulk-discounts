@@ -17,12 +17,18 @@ RSpec.describe "Bulk Discount Examples" do
       item_B = create(:item, merchant: merchant_A)
 
       customer = create(:customer)
+      customers = create_list(:customer, 40)
       invoice_A = create(:invoice, customer: customer, status: :completed)
       
       invoice_item_1 = create(:invoice_item, invoice: invoice_A, item: item_A, quantity: 5, status: :shipped)
       invoice_item_2 = create(:invoice_item, invoice: invoice_A, item: item_B, quantity: 5, status: :shipped)
-      # require 'pry'; binding.pry
+
+      transaction_1 = create(:transaction, invoice: invoice_A, result: :success)
+
+      eligible_discounts = invoice_A.merchants.first.bulk_discounts.where("minimum_quantity <= ?", invoice_A.items.sum(:quantity))
       total_price_without_discount = invoice_item_1.total_price + invoice_item_2.total_price
+
+      expect(invoice_A.total_revenue).to eq(total_price_without_discount)
     end
   end
 end
