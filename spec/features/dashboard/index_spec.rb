@@ -202,6 +202,7 @@ RSpec.describe "merchant dashboard" do
         expect(page).to_not have_content(discount.discount_percentage)
         expect(page).to_not have_content(discount.minimum_quantity)
       end
+      save_and_open_page
     end
 
   end

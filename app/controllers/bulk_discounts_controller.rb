@@ -22,6 +22,7 @@ class BulkDiscountsController < ApplicationController
   
   def destroy
     @bulk_discount.destroy
+    flash[:notice] = "Discount was successfully deleted."
     redirect_to merchant_bulk_discounts_path(@merchant)
   end
 
