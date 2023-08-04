@@ -172,4 +172,18 @@ RSpec.describe "merchant dashboard" do
       expect(page).to have_content(13)
     end
   end
+
+  describe "User Story 3" do
+    before :each do
+      @merchant_A = create(:merchant)
+      @bulk_discounts = create_list(:bulk_discount, 5, merchant: @merchant_A)
+    end
+
+    it "displays a link to delete the discount" do
+
+      visit merchant_bulk_discounts_path(@merchant_A.id)
+
+      expect(page).to have_button("Delete Discount")
+    end
+  end
 end
