@@ -22,7 +22,6 @@ FactoryBot.define do
     name {Faker::IndustrySegments.sub_sector}
     description {Faker::Company.bs}
     unit_price {Faker::Number.decimal(l_digits: 2)}
-    merchant
   end
 
   factory :transaction do
@@ -38,7 +37,7 @@ FactoryBot.define do
   end
 
   factory :bulk_discount do
-    discount_percentage { rand(1..100) }
-    minimum_quantity { rand(1..10) }
+    discount_percentage { rand(0.01..0.99) }
+    minimum_quantity { rand(10..20) }
   end
 end

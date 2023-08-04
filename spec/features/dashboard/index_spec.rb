@@ -119,4 +119,32 @@ RSpec.describe "merchant dashboard" do
   it "shows the date that the invoice was created in this format: Monday, July 18, 2019" do
     expect(page).to have_content(@invoice_1.created_at.strftime("%A, %B %-d, %Y"))
   end
+
+  describe "User Story 1" do
+    before :each do
+      @merchant_A = create(:merchant)
+      @bulk_discounts = create_list(:bulk_discount, 5, merchant: @merchant_A)
+    end
+    it "displays link to view all my bulk discounts" do
+
+      visit merchant_dashboard_index_path(@merchant_A.id)
+
+      expect(page).to have_link("Bulk Discounts", href: merchant_bulk_discounts_path(@merchant_A.id))
+    end
+
+    it "When I click the link I am taken to the bulk discounts index page" do
+
+      visit merchant_dashboard_index_path(@merchant_A.id)
+
+      click_link("Bulk Discounts")
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant_A.id))
+      
+      expect(page).to have_content("My Bulk Discounts")
+      @bulk_discounts.each do |discount|
+        expect(page).to have_content("-#{discount.percentage_converted}% off")
+        expect(page).to have_content(discount.minimum_quantity)
+        expect(page).to have_button("Show Page")
+      end
+    end
+  end
 end
