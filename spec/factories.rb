@@ -5,8 +5,7 @@ FactoryBot.define do
   end
 
   factory :invoice do
-    status {[0,1,2].sample}
-    customer
+    status {[:cancelled, :in_progress, :completed].sample}
   end
 
   factory :merchant do
@@ -29,12 +28,12 @@ FactoryBot.define do
   factory :transaction do
     result {[0,1].sample}
     credit_card_number {Faker::Finance.credit_card}
-    invoice
   end
 
   factory :invoice_item do
-    status {[0,1,2].sample}
-    invoice
+    quantity {rand(1..10)}
+    unit_price { Faker::Commerce.price }
+    status {[:shipped, :packaged, :pending].sample}
   end
 
   factory :bulk_discount do
