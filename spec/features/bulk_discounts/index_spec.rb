@@ -24,6 +24,17 @@ RSpec.describe "bulk discounts dashboard", type: :feature do
       expect(page).to have_content(77)
       expect(page).to have_content(13)
     end
+
+    it "cannot be submitted with invalid data" do
+
+      visit new_merchant_bulk_discount_path(@merchant_A)
+      fill_in "bulk_discount[discount_percentage]", with: 1.77325
+      fill_in "bulk_discount[minimum_quantity]", with: 13
+      click_button
+
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant_A))
+      expect(page).to have_content("Discount percentage must be between 0.01 and 0.99")
+    end
   end
 
   describe "User Story 3" do
