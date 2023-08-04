@@ -10,8 +10,7 @@ class BulkDiscountsController < ApplicationController
   end
 
   def create
-    bulk_discount = BulkDiscount.new(bulk_discount_params)
-    bulk_discount.merchant_id = @merchant.id
+    bulk_discount = @merchant.bulk_discounts.new(bulk_discount_params)
     if bulk_discount.save
       flash[:notice] = "New discount was successfully created."
       redirect_to merchant_bulk_discounts_path(@merchant)
