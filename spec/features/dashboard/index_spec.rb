@@ -147,4 +147,29 @@ RSpec.describe "merchant dashboard" do
       end
     end
   end
+
+  describe "User Story 2" do
+    before :each do
+      @merchant_A = create(:merchant)
+      @bulk_discounts = create_list(:bulk_discount, 5, merchant: @merchant_A)
+    end
+
+    it "displays a link to create new discount" do
+
+      visit merchant_bulk_discounts_path(@merchant_A.id)
+
+      expect(page).to have_link("Create New Discount", href: new_merchant_bulk_discount_path(@merchant_A))
+    end
+
+    it "can create new discount and redirects back to bulk discount index" do
+
+      visit new_merchant_bulk_discount_path(@merchant_A)
+      fill_in "bulk_discount[discount_percentage]", with: 0.77
+      fill_in "bulk_discount[minimum_quantity]", with: 13
+      click_button
+
+      expect(page).to have_content(77)
+      expect(page).to have_content(13)
+    end
+  end
 end
