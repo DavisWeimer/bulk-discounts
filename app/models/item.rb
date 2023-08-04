@@ -7,6 +7,8 @@ class Item < ApplicationRecord
   has_many :invoice_items, dependent: :destroy
   has_many :invoices, through: :invoice_items, dependent: :destroy
   belongs_to :merchant
+  has_many :item_bulk_discounts, dependent: :destroy
+  has_many :bulk_discounts, through: :item_bulk_discounts, dependent: :destroy
 
   enum status: [:disabled, :enabled]
 

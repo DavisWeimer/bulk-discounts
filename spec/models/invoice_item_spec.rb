@@ -39,4 +39,22 @@ RSpec.describe InvoiceItem, type: :model do
       expect(InvoiceItem.incomplete_invoices).to eq([@i1, @i3])
     end
   end
+
+  describe "instance methods" do
+    it "#total_price" do
+      merchant_A = create(:merchant)
+      bulk_discount_A = create(:bulk_discount, merchant: merchant_A, discount_percentage: 20, minimum_quantity: 10)
+      item_A = create(:item, merchant: merchant_A)
+      item_B = create(:item, merchant: merchant_A)
+
+      customer = create(:customer)
+      invoice_A = create(:invoice, customer: customer, status: :completed)
+      
+      invoice_item_1 = create(:invoice_item, invoice: invoice_A, item: item_A, quantity: 5, unit_price: 10.00, status: :shipped)
+      invoice_item_2 = create(:invoice_item, invoice: invoice_A, item: item_B, quantity: 5, unit_price: 20.00, status: :shipped)
+
+      expect(invoice_item_1.total_price).to eq 50
+      expect(invoice_item_2.total_price).to eq 100
+    end
+  end
 end
