@@ -51,7 +51,7 @@ RSpec.describe "bulk discounts dashboard", type: :feature do
         end
       end
 
-      (discounts_to_delete - @bulk_discounts).each do |discount|
+      discounts_to_delete.each do |discount|
         expect(page).to_not have_content(discount.discount_percentage)
         expect(page).to_not have_content(discount.minimum_quantity)
       end
