@@ -6,14 +6,17 @@ FactoryBot.define do
 
   factory :invoice do
     status {[0,1,2].sample}
-    merchant
     customer
   end
 
   factory :merchant do
     name {Faker::Space.galaxy}
-    invoices
-    items
+    trait :invoices do
+      invoices { association(:invoice) }
+    end
+    trait :items do
+      items { association(:item) }
+    end
   end
 
   factory :item do
@@ -31,7 +34,11 @@ FactoryBot.define do
 
   factory :invoice_item do
     status {[0,1,2].sample}
-    merchant
     invoice
+  end
+
+  factory :bulk_discount do
+    discount_percentage { rand(1..100) }
+    minimum_quantity { rand(1..10) }
   end
 end
