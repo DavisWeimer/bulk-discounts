@@ -1,0 +1,15 @@
+<%= render partial: "shared/nav" %>
+
+<body>
+  <div class="row">
+    <p class='col-12'>Discount #<%= @bulk_discount.id %></p>
+  </div>
+
+  <div id="current_bulk_discount">
+    <strong>Percentage: </strong>-<%= @bulk_discount.percentage_converted %>% off
+    <br>
+    <br>
+    <strong>Minimum Quantity: </strong><%= @bulk_discount.minimum_quantity %>
+  </div>
+
+</body>
