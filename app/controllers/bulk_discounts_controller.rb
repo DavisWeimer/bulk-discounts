@@ -1,5 +1,5 @@
 class BulkDiscountsController < ApplicationController
-  before_action :find_bulk_discount_and_merchant, only: [:show, :destroy]
+  before_action :find_bulk_discount_and_merchant, only: [:edit, :update, :show, :destroy]
   before_action :find_merchant, only: [:new, :create, :index]
 
   def index
@@ -28,6 +28,18 @@ class BulkDiscountsController < ApplicationController
   end
 
   def show; end
+
+  def edit; end
+
+  def update
+    if @bulk_discount.update(bulk_discount_params)
+      flash[:notice] = "Succesfully Updated Bulk Discount Info!"
+      redirect_to merchant_bulk_discount_path(@merchant, @bulk_discount)
+    else
+      flash[:alert] = "All fields must be completed correctly, do you even want to sell things?"
+      render :edit
+    end
+  end
 
   private
   def bulk_discount_params

@@ -21,4 +21,62 @@ RSpec.describe "bulk discounts show", type: :feature do
       expect(page).to have_content(bulk_discount_A.minimum_quantity)
     end
   end
+
+  describe "User Story 5" do
+    before :each do
+      @merchant_A = create(:merchant)
+      @bulk_discounts = create_list(:bulk_discount, 5, merchant: @merchant_A)
+      @bulk_discount_A = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.44, minimum_quantity: 1234)
+    end
+
+    it "displays button to edit" do
+
+      visit merchant_bulk_discount_path(@merchant_A, @bulk_discount_A)
+
+      expect(page).to have_button("Edit")
+    end
+
+    it "can edit current bulk discount and redirect back to bulk discount show page" do
+
+      visit merchant_bulk_discount_path(@merchant_A, @bulk_discount_A)
+
+      click_button("Edit")
+      expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant_A, @bulk_discount_A))
+
+      within ".merchant_bulk_discount_form" do
+        expect(find_field("bulk_discount[discount_percentage]").value).to eq(@bulk_discount_A.discount_percentage.to_s)
+        expect(find_field("bulk_discount[minimum_quantity]").value).to eq(@bulk_discount_A.minimum_quantity.to_s)
+        
+        fill_in "bulk_discount[discount_percentage]", with: 0.25
+        fill_in "bulk_discount[minimum_quantity]", with: 25
+        click_button("Submit")
+      end
+      
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant_A, @bulk_discount_A))
+      expect(page).to have_content("-25% off")
+      expect(page).to have_content("25")
+      
+    end
+    
+    it "can not update bulk discount with invalid data" do
+      
+      visit merchant_bulk_discount_path(@merchant_A, @bulk_discount_A)
+      
+      click_button("Edit")
+      expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant_A, @bulk_discount_A))
+
+      within ".merchant_bulk_discount_form" do
+        expect(find_field("bulk_discount[discount_percentage]").value).to eq(@bulk_discount_A.discount_percentage.to_s)
+        expect(find_field("bulk_discount[minimum_quantity]").value).to eq(@bulk_discount_A.minimum_quantity.to_s)
+        
+        fill_in "bulk_discount[discount_percentage]", with: 12345
+        fill_in "bulk_discount[minimum_quantity]", with: "doodoo"
+        click_button("Submit")
+      end
+      
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant_A, @bulk_discount_A))
+      expect(page).to have_content("All fields must be completed correctly, do you even want to sell things?")
+      
+    end
+  end
 end
