@@ -4,7 +4,7 @@
   </div>
 <% end %>
 
-<%= form_with model: model, method: method, url: url, class: 'merchant_bulk_discount_form', local: true do |f| %>
+<%= form_with model: model, method: method, url: url, class: "merchant_bulk_discount_form", local: true do |f| %>
   <%= f.label :discount_percentage %>
   <%= f.number_field :discount_percentage, step: '0.01' %><br/><br/>
   <%= f.label :minimum_quantity %>
