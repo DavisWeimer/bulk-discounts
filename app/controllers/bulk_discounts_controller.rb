@@ -32,7 +32,13 @@ class BulkDiscountsController < ApplicationController
   def edit; end
 
   def update
-    
+    if @bulk_discount.update(bulk_discount_params)
+      flash[:notice] = "Succesfully Updated Bulk Discount Info!"
+      redirect_to merchant_bulk_discount_path(@merchant, @bulk_discount)
+    else
+      flash[:alert] = "All fields must be completed correctly, do you even want to sell things?"
+      render :edit
+    end
   end
 
   private
