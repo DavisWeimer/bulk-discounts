@@ -31,7 +31,7 @@ RSpec.describe "bulk discounts dashboard", type: :feature do
       fill_in "bulk_discount[discount_percentage]", with: 112.77325
       fill_in "bulk_discount[minimum_quantity]", with: 13
       click_button
-      save_and_open_page
+      
       expect(page).to have_content("Discount percentage must be between 0.01 and 0.99")
 
     end
