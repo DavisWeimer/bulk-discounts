@@ -9,7 +9,7 @@ FactoryBot.define do
   end
 
   factory :merchant do
-    name {Faker::Games::Fallout.character}
+    name {"#{Faker::TvShows::StarTrek.character} #{Faker::Company.industry}"}
     trait :invoices do
       invoices { association(:invoice) }
     end
@@ -19,8 +19,8 @@ FactoryBot.define do
   end
 
   factory :item do
-    name {Faker::IndustrySegments.sub_sector}
-    description {Faker::Company.bs}
+    name {"#{Faker::Hipster.word} #{Faker::Cannabis.buzzword}"}
+    description {Faker::Quotes::Shakespeare.as_you_like_it_quote}
     unit_price {Faker::Number.decimal(l_digits: 2)}
   end
 
@@ -39,5 +39,9 @@ FactoryBot.define do
   factory :bulk_discount do
     discount_percentage { rand(0.01..0.99) }
     minimum_quantity { rand(10..20) }
+  end
+
+  factory :item_bulk_discount do
+
   end
 end

@@ -35,7 +35,7 @@ class Merchant < ApplicationRecord
     .group(:id)
     .order('total_revenue desc')
     .limit(5)
-   end
+  end
 
   def self.top_merchants
     joins(invoices: [:invoice_items, :transactions])
@@ -61,5 +61,18 @@ class Merchant < ApplicationRecord
 
   def disabled_items
     items.where(status: 0)
+  end
+
+  def associate_bulk_discounts
+    items.each do |item|
+      invoice_item = invoice_items.find_by(item: item)
+      next unless invoice_item
+  
+      applicable_discounts = bulk_discounts.select do |bulk_discount|
+        bulk_discount.minimum_quantity <= invoice_item.quantity
+      end
+  
+      item.bulk_discounts.concat(applicable_discounts)
+    end
   end
 end

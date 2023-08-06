@@ -103,26 +103,29 @@ RSpec.describe "invoices show" do
   describe "User Story 6" do
     before :each do
       @merchant_A = create(:merchant)
+  
       @bulk_discount_A = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.20, minimum_quantity: 10)
-      @item_A = create(:item, merchant: @merchant_A)
-      @item_B = create(:item, merchant: @merchant_A)
-
+      @bulk_discount_B = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.30, minimum_quantity: 15)
+      
+      @item_A = create(:item, merchant: @merchant_A, unit_price: 15)
+      
+      @item_B = create(:item, merchant: @merchant_A, unit_price: 5)
+      
       @customer = create(:customer)
-      @customers = create_list(:customer, 40)
       @invoice_A = create(:invoice, customer: @customer, status: :completed)
       
-      @invoice_item_1 = create(:invoice_item, invoice: @invoice_A, item: @item_A, quantity: 10, status: :shipped)
-      @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 5, status: :shipped)
-
-      @transaction_1 = create(:transaction, invoice: @invoice_A, result: :success)
+      @invoice_item_1 = create(:invoice_item, invoice: @invoice_A, item: @item_A, quantity: 10, unit_price: @item_A.unit_price, status: :shipped)
+      @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 10, unit_price: @item_B.unit_price, status: :shipped)
+      
+      @merchant_A.associate_bulk_discounts
     end
-
+  
     it "displays the total discounted revenue for this invoice" do
-
       visit merchant_invoice_path(@merchant_A, @invoice_A)
-
-      expect(page).to have_content(@invoice_A.total_discounted_revenue)
-
+  
+      expect(page).to have_content(@invoice_A.total_revenue) 
+      expect(page).to have_content(@invoice_A.total_revenue) 
+      expect(page).to have_content(@invoice_A.discounted_revenue)
     end
   end
 end

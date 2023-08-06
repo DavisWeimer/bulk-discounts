@@ -21,4 +21,8 @@ class Item < ApplicationRecord
     .order("money desc", "created_at desc")
     .first&.created_at&.to_date
   end
+
+  def applicable_bulk_discount(quantity)
+    bulk_discounts.where("minimum_quantity <= ?", quantity).order(discount_percentage: :desc).first
+  end
 end
