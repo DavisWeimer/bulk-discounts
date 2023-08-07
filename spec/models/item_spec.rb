@@ -62,5 +62,27 @@ RSpec.describe Item, type: :model do
 
       expect(@item_1.best_day).to eq(@invoice_2.created_at.to_date)
     end
+
+    it "#applicable_bulk_discount()" do
+      @merchant_A = create(:merchant)
+  
+      @bulk_discount_A = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.25, minimum_quantity: 5)
+      @bulk_discount_B = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.68, minimum_quantity: 15)
+      
+      @item_A = create(:item, merchant: @merchant_A, unit_price: 15)
+      
+      @item_B = create(:item, merchant: @merchant_A, unit_price: 5)
+      
+      @customer = create(:customer)
+      @invoice_A = create(:invoice, customer: @customer, status: :completed)
+      
+      @invoice_item_1 = create(:invoice_item, invoice: @invoice_A, item: @item_A, quantity: 15, unit_price: @item_A.unit_price, status: :shipped)
+      @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 14, unit_price: @item_B.unit_price, status: :shipped)
+
+      @merchant_A.associate_bulk_discounts
+
+      expect(@invoice_item_1.item.applicable_bulk_discount(@invoice_item_1.quantity)).to eq(@bulk_discount_B)
+      expect(@invoice_item_2.item.applicable_bulk_discount(@invoice_item_2.quantity)).to eq(@bulk_discount_A)
+    end
   end
 end

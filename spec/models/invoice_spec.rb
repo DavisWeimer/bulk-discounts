@@ -39,9 +39,9 @@ RSpec.describe Invoice, type: :model do
       
       @invoice_item_1 = create(:invoice_item, invoice: @invoice_A, item: @item_A, quantity: 15, unit_price: @item_A.unit_price, status: :shipped)
       @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 14, unit_price: @item_B.unit_price, status: :shipped)
-      
-      @merchant_A.associate_bulk_discounts
 
+      @merchant_A.associate_bulk_discounts
+      
       expect(@invoice_A.total_revenue).to eq(295)
       expect(@invoice_A.discounted_revenue).to eq(124.5)
     end

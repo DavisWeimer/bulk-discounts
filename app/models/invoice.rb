@@ -16,14 +16,32 @@ class Invoice < ApplicationRecord
   end
 
   def discounted_revenue
-    invoice_items.sum do |invoice_item|
-      item = invoice_item.item
-      bulk_discount = item.applicable_bulk_discount(invoice_item.quantity)
+    total_discounted_revenue = 0
+  
+    invoice_items.each do |invoice_item|
+      bulk_discount = invoice_item.item.applicable_bulk_discount(invoice_item.quantity)
+  
       if bulk_discount
-        (invoice_item.unit_price - (invoice_item.unit_price * bulk_discount.discount_percentage)).round(2) * invoice_item.quantity
+        discounted_price = (invoice_item.unit_price - (invoice_item.unit_price * bulk_discount.discount_percentage)).round(2)
+        total_discounted_revenue += discounted_price * invoice_item.quantity
       else
-        invoice_item.total_price
+        total_discounted_revenue += invoice_item.total_price
       end
     end
+  
+    total_discounted_revenue
   end
+
+=begin
+I could not get this same functionality in the AR query yet, 
+I'll return to this later during some refactoring
+
+def discounted_revenue
+  total_discounted_revenue = invoice_items
+    .joins(item: { item_bulk_discounts: :bulk_discount })
+    .where("bulk_discounts.minimum_quantity <= invoice_items.quantity")
+    .order(discount_percentage: :desc)
+    .first
+end
+=end
 end 
