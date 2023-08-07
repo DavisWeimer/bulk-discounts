@@ -122,10 +122,44 @@ RSpec.describe "invoices show" do
   
     it "displays the total discounted revenue for this invoice" do
       visit merchant_invoice_path(@merchant_A, @invoice_A)
-  
       expect(page).to have_content(@invoice_A.total_revenue) 
       expect(page).to have_content(@invoice_A.total_revenue) 
       expect(page).to have_content(@invoice_A.discounted_revenue)
     end
+  end
+
+  describe "User Story 7" do
+    before :each do
+      @merchant_A = create(:merchant)
+  
+      @bulk_discount_A = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.20, minimum_quantity: 10)
+      @bulk_discount_B = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.30, minimum_quantity: 15)
+      
+      @item_A = create(:item, merchant: @merchant_A, unit_price: 15)
+      
+      @item_B = create(:item, merchant: @merchant_A, unit_price: 5)
+      
+      @customer = create(:customer)
+      @invoice_A = create(:invoice, customer: @customer, status: :completed)
+      
+      @invoice_item_1 = create(:invoice_item, invoice: @invoice_A, item: @item_A, quantity: 10, unit_price: @item_A.unit_price, status: :shipped)
+      @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 10, unit_price: @item_B.unit_price, status: :shipped)
+      
+      @merchant_A.associate_bulk_discounts
+    end
+
+    it "displays the discount applied (if any) next to the invoice item as a link to the discount" do
+      visit merchant_invoice_path(@merchant_A, @invoice_A)
+
+      within "#the-status-#{@invoice_item_1.id}" do
+        expect(page).to have_button("-#{@invoice_item_1.bulk_discount.percentage_converted}% off #{@invoice_item_1.bulk_discount.minimum_quantity} items")
+        click_button("-#{@invoice_item_1.bulk_discount.percentage_converted}% off #{@invoice_item_1.bulk_discount.minimum_quantity} items")
+      end
+
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant_A, @invoice_item_1.bulk_discount))
+      expect(page).to have_content("Percentage: -20% off")
+      expect(page).to have_content("Minimum Quantity: 10")
+    end
+
   end
 end
