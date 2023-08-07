@@ -7,6 +7,7 @@ class Invoice < ApplicationRecord
   has_many :invoice_items, dependent: :destroy
   has_many :items, through: :invoice_items, dependent: :destroy
   has_many :merchants, through: :items, dependent: :destroy
+  has_many :item_bulk_discounts, through: :items, dependent: :destroy
   has_many :bulk_discounts, through: :item_bulk_discounts, dependent: :destroy
 
   enum status: [:cancelled, :in_progress, :completed]
