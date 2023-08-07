@@ -168,5 +168,26 @@ describe Merchant do
       expect(@merchant1.disabled_items).to eq([@item_2, @item_3, @item_4, @item_7, @item_8])
       expect(@merchant2.disabled_items).to eq([@item_5, @item_6])
     end
+
+    it "#associate_bulk_discounts" do
+      @merchant_A = create(:merchant)
+  
+      @bulk_discount_A = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.20, minimum_quantity: 10)
+      @bulk_discount_B = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.30, minimum_quantity: 15)
+      
+      @item_A = create(:item, merchant: @merchant_A, unit_price: 15)
+      @item_B = create(:item, merchant: @merchant_A, unit_price: 5)
+      
+      @customer = create(:customer)
+      @invoice_A = create(:invoice, customer: @customer, status: :completed)
+      
+      @invoice_item_1 = create(:invoice_item, invoice: @invoice_A, item: @item_A, quantity: 16, unit_price: @item_A.unit_price, status: :shipped)
+      @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 9, unit_price: @item_B.unit_price, status: :shipped)
+      
+      @merchant_A.associate_bulk_discounts
+      
+      expect(@item_A.bulk_discounts).to eq([@bulk_discount_A, @bulk_discount_B])
+      expect(@item_B.bulk_discounts).to eq([])
+    end
   end
 end
