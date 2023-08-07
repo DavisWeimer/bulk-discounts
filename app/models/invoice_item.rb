@@ -7,6 +7,7 @@ class InvoiceItem < ApplicationRecord
 
   belongs_to :invoice
   belongs_to :item
+  has_many :bulk_discounts, through: :item
 
   enum status: [:pending, :packaged, :shipped]
 
@@ -17,5 +18,10 @@ class InvoiceItem < ApplicationRecord
 
   def total_price
     unit_price * quantity
+  end
+
+
+  def bulk_discount
+    bulk_discounts.first
   end
 end
