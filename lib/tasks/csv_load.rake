@@ -1,7 +1,7 @@
 require "csv"
 namespace :csv_load do
    task :customers => :environment do
-      CSV.foreach("db/data/customers.csv", headers: true) do |row|
+      CSV.foreach("db/data/customers_gen.csv", headers: true) do |row|
          Customer.create!(row.to_hash)
       end
       ActiveRecord::Base.connection.reset_pk_sequence!("customers")
@@ -9,7 +9,7 @@ namespace :csv_load do
    end
 
    task :merchants => :environment do
-      CSV.foreach("db/data/merchants.csv", headers: true) do |row|
+      CSV.foreach("db/data/merchants_gen.csv", headers: true) do |row|
          Merchant.create!(row.to_hash)
       end
       ActiveRecord::Base.connection.reset_pk_sequence!("merchants")
@@ -25,7 +25,7 @@ namespace :csv_load do
    end
 
    task :items => :environment do
-      CSV.foreach("db/data/items.csv", headers: true) do |row|
+      CSV.foreach("db/data/items_gen.csv", headers: true) do |row|
          Item.create!(id: row.to_hash["id"], name: row.to_hash["name"], description: row.to_hash["description"], unit_price: row.to_hash["unit_price"].to_f / 100, created_at: row.to_hash["created_at"], updated_at: row.to_hash["updated_at"], merchant_id: row.to_hash["merchant_id"], status: 1)
       end
       ActiveRecord::Base.connection.reset_pk_sequence!("items")

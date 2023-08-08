@@ -9,7 +9,7 @@ FactoryBot.define do
   end
 
   factory :merchant do
-    name {"#{Faker::TvShows::StarTrek.character} #{Faker::Company.industry}"}
+    name {"#{Faker::TvShows::Simpsons.character} #{Faker::Company.industry}"}
     trait :invoices do
       invoices { association(:invoice) }
     end
@@ -19,9 +19,9 @@ FactoryBot.define do
   end
 
   factory :item do
-    name {"#{Faker::Hipster.word} #{Faker::Cannabis.buzzword}"}
-    description {Faker::Quotes::Shakespeare.as_you_like_it_quote}
-    unit_price {Faker::Number.decimal(l_digits: 2)}
+    name {"#{Faker::Emotion.adjective.capitalize} #{[Faker::Games::DnD.melee_weapon, Faker::Games::DnD.ranged_weapon, Faker::Appliance.equipment, Faker::Games::ElderScrolls.weapon, Faker::Beer.style, Faker::Food.dish].sample.capitalize}"}
+    description {Faker::TvShows::Spongebob.quote}
+    unit_price { Faker::Number.decimal(l_digits: 2)}
   end
 
   factory :transaction do
