@@ -68,4 +68,29 @@ RSpec.describe "bulk discounts dashboard", type: :feature do
       end
     end
   end
+
+  describe "User Story 9" do
+    before :each do
+      @merchant_A = create(:merchant)
+  
+      @bulk_discount_A = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.69, minimum_quantity: 420)
+      
+      @item_A = create(:item, merchant: @merchant_A, unit_price: 15)
+      
+      @item_B = create(:item, merchant: @merchant_A, unit_price: 5)
+      
+      @customer = create(:customer)
+      @invoice_A = create(:invoice, customer: @customer, status: :completed)
+      
+      @invoice_item_1 = create(:invoice_item, invoice: @invoice_A, item: @item_A, quantity: 1000, unit_price: @item_A.unit_price, status: :shipped)
+      @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 500, unit_price: @item_B.unit_price, status: :shipped)
+      
+      @merchant_A.associate_bulk_discounts
+    end
+
+    it "displays a section with the 3 upcoming US holidays from the Nager.Date API" do
+      visit merchant_bulk_discounts_path(@merchant_A.id)
+      expect(page).to have_content("Upcoming Holidays")
+    end
+  end
 end

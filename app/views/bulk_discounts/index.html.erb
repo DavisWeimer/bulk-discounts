@@ -1,5 +1,6 @@
 <%= render partial: "shared/nav" %>
 
+
 <body>
   <div class="row">
     <p class='col-12'>My Bulk Discounts</p>
@@ -13,19 +14,31 @@
         <p>Bulk Discounts</p>
       </div>
 
-    <ul>
-      <section id="bulk_discounts">
-        <% @bulk_discounts.each do |discount| %>
-          <section id="discount-<%= discount.id %>">
-            <p>Percentage: -<%= discount.percentage_converted %>% off</p>
-            <p>Minimum Quantity: <%= discount.minimum_quantity %></p>
-            <%= button_to "Show Page", merchant_bulk_discount_path(@merchant.id, discount.id), method: :get %>
-            <%= button_to "Delete", merchant_bulk_discount_path(@merchant.id, discount.id), method: :delete %>
-          </section>
-        <% end %>
-      </section>
-    </ul>
-
+      <ul>
+        <section id="bulk_discounts">
+          <% @bulk_discounts.each do |discount| %>
+            <section id="discount-<%= discount.id %>">
+              <p>Percentage: -<%= discount.percentage_converted %>% off</p>
+              <p>Minimum Quantity: <%= discount.minimum_quantity %></p>
+              <%= button_to "Show Page", merchant_bulk_discount_path(@merchant.id, discount.id), method: :get %>
+              <%= button_to "Delete", merchant_bulk_discount_path(@merchant.id, discount.id), method: :delete %>
+            </section>
+          <% end %>
+        </section>
+      </ul>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="column-header">
+        <p>Upcoming Holidays</p>
+      </div>
+      <ol>
+        <section id="upcoming_holidays">
+          things eventually
+        </section>
+      </ol>
+    </div>  
+  </div>    
 </body>
