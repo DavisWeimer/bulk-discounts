@@ -31,4 +31,54 @@ RSpec.describe "Bulk Discount Examples" do
       expect(invoice_A.total_revenue).to eq(total_price_without_discount)
     end
   end
+
+  describe "can generate" do
+    xit "a customer CSV from FactoryBot!" do
+      customers = FactoryBot.build_list(:customer, 1000)
+      
+      csv_headers = ["first_name", "last_name"]
+
+      csv_data = CSV.generate(headers: true) do |csv|
+        csv << csv_headers
+
+        customers.each do |customer|
+          csv << [customer.first_name, customer.last_name]
+        end
+      end
+
+      File.write("customers_gen.csv", csv_data)
+    end
+
+    xit "a merchant CSV from FactoryBot!" do
+      merchants = FactoryBot.build_list(:merchant, 100)
+      
+      csv_headers = ["name"]
+
+      csv_data = CSV.generate(headers: true) do |csv|
+        csv << csv_headers
+
+        merchants.each do |merchant|
+          csv << [merchant.name]
+        end
+      end
+
+      File.write("merchants_gen.csv", csv_data)
+    end
+
+    xit "an item CSV from FactoryBot!" do
+      items = FactoryBot.build_list(:item, 2500)
+
+      csv_headers = ["name", "description", "unit_price"]
+
+      csv_data = CSV.generate(headers: true) do |csv|
+        csv << csv_headers
+
+        items.each do |item|
+          csv << [item.name, item.description, item.unit_price]
+        end
+      end
+
+      File.write("items_gen.csv", csv_data)
+    end
+  end
 end
