@@ -2,7 +2,53 @@ require "rails_helper"
 
 RSpec.describe "bulk discounts dashboard", type: :feature do
   describe "User Story 2" do
-    before :each do
+    before do
+=begin
+
+Welp, I tried. It keeps trying to actually make the HTTP request?
+I'm thinking it's something to do with HTTParty configuration?
+The lesson uses Faraday and I tried that for a second but switched back
+I'll keep looking into it!
+
+      WebMock.enable!
+
+      body = [
+        {
+          "date": "2023-12-25",
+          "localName": "Christmas Day"
+        },
+        {
+          "date": "2023-11-11",
+          "localName": "Veterans Day"
+        },
+        {
+          "date": "2023-10-31",
+          "localName": "Halloween"
+        }
+      ].to_json
+
+      stub_request(:get, "https://date.nager.at/api/v3/NextPublicHolidays/US").
+        with(
+          headers: {
+          'Accept'=>'*/*',
+          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'User-Agent'=>'Ruby'
+          }).
+        to_return(status: 200, body: body, headers: {})
+    
+      registered request stubs:
+        
+      stub_request(:get, "https://date.nager.at/api/v3/NextPublicHolidays/US").
+        with(
+          headers: {
+          'Accept'=>'*/*',
+          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'User-Agent'=>'HTTParty'
+          })
+
+      @upcoming_holidays = HolidayService.new.upcoming_holidays
+
+=end
       @merchant_A = create(:merchant)
       @bulk_discounts = create_list(:bulk_discount, 5, merchant: @merchant_A)
     end
@@ -86,11 +132,17 @@ RSpec.describe "bulk discounts dashboard", type: :feature do
       @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 500, unit_price: @item_B.unit_price, status: :shipped)
       
       @merchant_A.associate_bulk_discounts
+
+      @upcoming_holidays = HolidayService.new.upcoming_holidays
     end
 
     it "displays a section with the 3 upcoming US holidays from the Nager.Date API" do
       visit merchant_bulk_discounts_path(@merchant_A.id)
       expect(page).to have_content("Upcoming Holidays")
+
+      within "#upcoming_holidays" do
+        expect(@upcoming_holidays.count).to eq(3)
+      end
     end
   end
 end

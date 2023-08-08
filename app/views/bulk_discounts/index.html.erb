@@ -36,7 +36,10 @@
       </div>
       <ol>
         <section id="upcoming_holidays">
-          things eventually
+          <% @upcoming_holidays.each do |holiday| %>
+            <li><%= holiday.first %></li>
+            <p><%= holiday.last %></p>
+          <% end %>
         </section>
       </ol>
     </div>  
