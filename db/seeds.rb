@@ -18,6 +18,7 @@ Rake::Task["csv_load:all"].invoke
 Merchant.all.each do |merchant|
   merchant.associate_bulk_discounts
 end
+puts "——————————————————————————"
 puts "Bulk discounts associated."
 
 # # 25.times do
