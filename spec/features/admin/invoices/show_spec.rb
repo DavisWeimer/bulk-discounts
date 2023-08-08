@@ -17,49 +17,53 @@ describe "Admin Invoices Index Page" do
     @ii_2 = InvoiceItem.create!(invoice_id: @i1.id, item_id: @item_2.id, quantity: 6, unit_price: 1, status: 1)
     @ii_3 = InvoiceItem.create!(invoice_id: @i2.id, item_id: @item_2.id, quantity: 87, unit_price: 12, status: 2)
 
-    visit admin_invoice_path(@i1)
   end
-
+  
   it "should display the id, status and created_at" do
+    visit admin_invoice_path(@i1)
     expect(page).to have_content("Invoice ##{@i1.id}")
     expect(page).to have_content("Created on: #{@i1.created_at.strftime("%A, %B %d, %Y")}")
-
+    
     expect(page).to_not have_content("Invoice ##{@i2.id}")
   end
-
+  
   it "should display the customers name and shipping address" do
+    visit admin_invoice_path(@i1)
     expect(page).to have_content("#{@c1.first_name} #{@c1.last_name}")
     expect(page).to have_content(@c1.address)
     expect(page).to have_content("#{@c1.city}, #{@c1.state} #{@c1.zip}")
-
+    
     expect(page).to_not have_content("#{@c2.first_name} #{@c2.last_name}")
   end
-
+  
   it "should display all the items on the invoice" do
+    visit admin_invoice_path(@i1)
     expect(page).to have_content(@item_1.name)
     expect(page).to have_content(@item_2.name)
-
+    
     expect(page).to have_content(@ii_1.quantity)
     expect(page).to have_content(@ii_2.quantity)
-
+    
     expect(page).to have_content("$#{@ii_1.unit_price}")
     expect(page).to have_content("$#{@ii_2.unit_price}")
-
+    
     expect(page).to have_content(@ii_1.status)
     expect(page).to have_content(@ii_2.status)
-
+    
     expect(page).to_not have_content(@ii_3.quantity)
     expect(page).to_not have_content("$#{@ii_3.unit_price}")
     expect(page).to_not have_content(@ii_3.status)
   end
-
+  
   it "should display the total revenue the invoice will generate" do
+    visit admin_invoice_path(@i1)
     expect(page).to have_content("Total Revenue: $#{@i1.total_revenue}")
-
+    
     expect(page).to_not have_content(@i2.total_revenue)
   end
-
+  
   it "should have status as a select field that updates the invoices status" do
+    visit admin_invoice_path(@i1)
     within("#status-update-#{@i1.id}") do
       select("cancelled", :from => "invoice[status]")
       expect(page).to have_button("Update Invoice")
@@ -70,5 +74,29 @@ describe "Admin Invoices Index Page" do
     end
   end
 
+  describe "User Story 8" do
+    before :each do
+      @merchant_A = create(:merchant)
   
+      @bulk_discount_A = create(:bulk_discount, merchant: @merchant_A, discount_percentage: 0.69, minimum_quantity: 420)
+      
+      @item_A = create(:item, merchant: @merchant_A, unit_price: 15)
+      
+      @item_B = create(:item, merchant: @merchant_A, unit_price: 5)
+      
+      @customer = create(:customer)
+      @invoice_A = create(:invoice, customer: @customer, status: :completed)
+      
+      @invoice_item_1 = create(:invoice_item, invoice: @invoice_A, item: @item_A, quantity: 1000, unit_price: @item_A.unit_price, status: :shipped)
+      @invoice_item_2 = create(:invoice_item, invoice: @invoice_A, item: @item_B, quantity: 500, unit_price: @item_B.unit_price, status: :shipped)
+      
+      @merchant_A.associate_bulk_discounts
+    end
+
+    it "displays the total discounted revenue for this admin invoice" do
+      visit admin_invoice_path(@invoice_A)
+      expect(page).to have_content("Total Revenue: $17,500.00") 
+      expect(page).to have_content("Discounted Revenue: $5,425.00")
+    end
+  end
 end

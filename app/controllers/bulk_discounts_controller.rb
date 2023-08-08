@@ -19,11 +19,13 @@ class BulkDiscountsController < ApplicationController
       flash[:alert] = "Discount percentage must be between 0.01 and 0.99"
       render :new
     end
+    @merchant.associate_bulk_discounts
   end
   
   def destroy
     @bulk_discount.destroy
     flash[:notice] = "Discount was successfully deleted."
+    @merchant.associate_bulk_discounts
     redirect_to merchant_bulk_discounts_path(@merchant)
   end
 
@@ -39,6 +41,7 @@ class BulkDiscountsController < ApplicationController
       flash[:alert] = "All fields must be completed correctly, do you even want to sell things?"
       render :edit
     end
+    @merchant.associate_bulk_discounts
   end
 
   private
