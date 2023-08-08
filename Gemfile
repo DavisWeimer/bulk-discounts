@@ -61,6 +61,8 @@ group :development, :test do
   gem "rspec-rails"
   gem "shoulda-matchers"
   gem "simplecov"
+  gem "httparty"
+  gem "json"
 end
 
 group :development do
