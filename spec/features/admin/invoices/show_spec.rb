@@ -95,7 +95,6 @@ describe "Admin Invoices Index Page" do
 
     it "displays the total discounted revenue for this admin invoice" do
       visit admin_invoice_path(@invoice_A)
-      save_and_open_page
       expect(page).to have_content("Total Revenue: $17,500.00") 
       expect(page).to have_content("Discounted Revenue: $5,425.00")
     end
